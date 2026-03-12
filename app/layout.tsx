@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (
     <html lang="en">
-      <body className={`${montserrat.className} min-h-screen antialiased`}>
+      <body className={`${montserrat.className} antialiased`}>
         <Header />
-        <main className="min-h-[calc(100vh-128px)]">{children}</main>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>
