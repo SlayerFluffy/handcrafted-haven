@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (
     <html lang="en">
-      <body className={`${montserrat.className} antialiased`}>
+      <body className={`${montserrat.className} antialiased bg-gray-800`}>
         <Header />
-        <main>{children}</main>
+        {children}
         <Footer />
       </body>
     </html>
