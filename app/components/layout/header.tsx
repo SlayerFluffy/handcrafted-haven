@@ -4,10 +4,12 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 
-const links = [
+const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/products', label: 'Products' },
-  { href: '/sellers', label: 'Sellers' },
+]
+
+const authLinks = [
   { href: '/login', label: 'Login' },
   { href: '/signup', label: 'Sign Up' },
 ]
@@ -15,7 +17,7 @@ const links = [
 const Header = () => {
   const pathname = usePathname()
 
-  const navLinks = links.map(({ href, label }) => (
+  const mainNav = navLinks.map(({ href, label }) => (
     <Link
       key={href}
       href={href}
@@ -26,10 +28,22 @@ const Header = () => {
     >{label}</Link>
   ))
 
+  const authNav = authLinks.map(({ href, label }) => (
+    <Link
+      key={href}
+      href={href}
+      className={clsx('text-sm font-medium transition-colors', {
+        'bg-white text-gray-900 px-4 py-2 rounded-md hover:bg-gray-100': label === 'Sign Up',
+        'text-gray-400 hover:text-white': label !== 'Sign Up',
+      })}
+    >{label}</Link>
+  ))
+
   return (
     <header className="bg-gray-800 px-10 py-8">
-      <nav className="flex gap-6">
-        {navLinks}
+      <nav className="flex items-center justify-between">
+        <div className="flex gap-6">{mainNav}</div>
+        <div className="flex items-center gap-4">{authNav}</div>
       </nav>
     </header>
   )
