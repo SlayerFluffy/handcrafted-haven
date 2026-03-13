@@ -30,8 +30,8 @@ const Header = () => {
       key={href}
       href={href}
       className={clsx('text-sm font-medium transition-colors', {
-        'text-white': pathname === href,
-        'text-gray-400 hover:text-white': pathname !== href,
+        'text-brand-primary': pathname === href,
+        'text-brand-text-light hover:text-brand-primary': pathname !== href,
       })}
     >{label}</Link>
   ))
@@ -41,8 +41,8 @@ const Header = () => {
       key={href}
       href={href}
       className={clsx('text-sm font-medium transition-colors', {
-        'bg-white text-gray-900 px-4 py-2 rounded-md hover:bg-gray-100': label === 'Sign Up',
-        'text-gray-400 hover:text-white': label !== 'Sign Up',
+        'bg-brand-primary text-white px-4 py-2 rounded-md hover:bg-brand-secondary': label === 'Sign Up',
+        'text-brand-text-light hover:text-brand-primary': label !== 'Sign Up',
       })}
     >{label}</Link>
   ))
@@ -55,9 +55,9 @@ const Header = () => {
         href={href}
         onClick={() => setMenuOpen(false)}
         className={clsx('flex items-center font-medium transition-colors', {
-          'justify-center border border-white text-white rounded-md py-2 mt-2 hover:bg-white hover:text-gray-900': isSignUp,
-          'justify-between py-3 border-b border-gray-700 text-base text-white': !isSignUp && pathname === href,
-          'justify-between py-3 border-b border-gray-700 text-base text-gray-400 hover:text-white': !isSignUp && pathname !== href,
+          'justify-center border-2 border-brand-primary text-brand-primary rounded-md py-2 mt-2 hover:bg-brand-primary hover:text-white': isSignUp,
+          'justify-between py-3 border-b border-brand-border text-base text-brand-primary': !isSignUp && pathname === href,
+          'justify-between py-3 border-b border-brand-border text-base text-brand-text-light hover:text-brand-primary': !isSignUp && pathname !== href,
         })}
       >
         {label}
@@ -71,29 +71,42 @@ const Header = () => {
   })
 
   return (
-    <header className="bg-transparent px-6 md:px-10 py-5 shadow-lg relative z-1">
+    <header className="sticky top-0 z-10 bg-brand-surface px-6 md:px-10 py-5 shadow-sm">
 
       <nav className="flex items-center justify-between">
 
         <div className="hidden md:flex items-center gap-8">
-          <span className="text-white font-semibold text-lg tracking-wide">Handcrafted Haven</span>
+          <span className="font-semibold text-lg tracking-wide">Handcrafted Haven</span>
           <div className="flex gap-6">{mainNav}</div>
         </div>
 
         <div className="hidden md:flex items-center gap-4">{authNav}</div>
 
-        <span className="md:hidden text-white font-semibold text-lg tracking-wide">Handcrafted Haven</span>
-        
+        <span className="md:hidden font-semibold text-lg tracking-wide">Handcrafted Haven</span>
+
         <button
-          className="md:hidden text-gray-400 hover:text-white text-3xl leading-none"
+          className="md:hidden text-brand-text-light hover:text-brand-primary p-1"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
-        >{menuOpen ? '✕' : '☰'}</button>
+        >
+          {menuOpen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          )}
+        </button>
 
       </nav>
 
       {menuOpen && (
-        <div className="md:hidden flex flex-col pt-4 border-t border-gray-700 mt-4">
+        <div className="md:hidden flex flex-col pt-4 border-t border-brand-border mt-4">
           {mobileNav}
         </div>
       )}
