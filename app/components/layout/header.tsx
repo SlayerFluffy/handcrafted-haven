@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { redirect, usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import clsx from 'clsx'
 import { authClient } from '@/app/lib/auth-client'
@@ -10,6 +10,8 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/products', label: 'Products' },
 ]
+
+const dashboardLink = { href: '/dashboard', label: 'Dashboard' }
 
 const guestLinks = [
   { href: '/login', label: 'Login' },
@@ -21,6 +23,7 @@ const Header = () => {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
   const { data: session, isPending } = authClient.useSession()
+  const visibleNavLinks = session ? [...navLinks, dashboardLink] : navLinks
 
   const router = useRouter()
 
@@ -31,7 +34,7 @@ const Header = () => {
     router.refresh()
   }
 
-  const mainNav = navLinks.map(({ href, label }) => (
+  const mainNav = visibleNavLinks.map(({ href, label }) => (
     <Link
       key={href}
       href={href}
@@ -64,7 +67,7 @@ const Header = () => {
     ))
   )
 
-  const mobileNav = navLinks.map(({ href, label }) => {
+  const mobileNav = visibleNavLinks.map(({ href, label }) => {
     const isSignUp = label === 'Sign Up'
     return (
       <Link
