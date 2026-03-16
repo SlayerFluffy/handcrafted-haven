@@ -1,29 +1,35 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { redirect, usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import clsx from 'clsx'
+import { authClient } from '@/app/lib/auth-client'
 
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/products', label: 'Products' },
 ]
 
-const authLinks = [
+const guestLinks = [
   { href: '/login', label: 'Login' },
   { href: '/signup', label: 'Sign Up' },
-]
-
-const allLinks = [
-  ...navLinks,
-  ...authLinks
 ]
 
 const Header = () => {
 
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
+  const { data: session, isPending } = authClient.useSession()
+
+  const router = useRouter()
+
+  const handleSignOut = async () => {
+    await authClient.signOut()
+    setMenuOpen(false)
+    router.push("/")
+    router.refresh()
+  }
 
   const mainNav = navLinks.map(({ href, label }) => (
     <Link
@@ -36,19 +42,29 @@ const Header = () => {
     >{label}</Link>
   ))
 
-  const authNav = authLinks.map(({ href, label }) => (
-    <Link
-      key={href}
-      href={href}
-      className={clsx("text-sm", {
-        "rounded-md bg-primary px-4 py-2 text-surface hover:bg-secondary": label === "Sign Up",
-        "text-text": label !== "Sign Up" && pathname === href,
-        "text-text-light hover:text-text": label !== "Sign Up" && pathname !== href,
-      })}
-    >{label}</Link>
-  ))
+  const authNav = session ? (
+    <button
+      type="button"
+      onClick={handleSignOut}
+      className="text-sm text-text-light hover:text-text"
+    >
+      Log Out
+    </button>
+  ) : (
+    guestLinks.map(({ href, label }) => (
+      <Link
+        key={href}
+        href={href}
+        className={clsx("text-sm", {
+          "rounded-md bg-primary px-4 py-2 text-surface hover:bg-secondary": label === "Sign Up",
+          "text-text": label !== "Sign Up" && pathname === href,
+          "text-text-light hover:text-text": label !== "Sign Up" && pathname !== href,
+        })}
+      >{label}</Link>
+    ))
+  )
 
-  const mobileNav = allLinks.map(({ href, label }) => {
+  const mobileNav = navLinks.map(({ href, label }) => {
     const isSignUp = label === 'Sign Up'
     return (
       <Link
@@ -71,6 +87,39 @@ const Header = () => {
     )
   })
 
+  const mobileAuthNav = session ? (
+    <button
+      type="button"
+      onClick={handleSignOut}
+      className="justify-between border-b border-border py-3 text-left text-base font-medium text-text-light hover:text-primary"
+    >
+      Log Out
+    </button>
+  ) : (
+    guestLinks.map(({ href, label }) => {
+      const isSignUp = label === 'Sign Up'
+      return (
+        <Link
+          key={href}
+          href={href}
+          onClick={() => setMenuOpen(false)}
+          className={clsx('flex items-center font-medium transition-colors', {
+            'mt-2 justify-center rounded-md border-2 border-primary py-2 text-primary hover:bg-primary hover:text-surface': isSignUp,
+            'justify-between border-b border-border py-3 text-base text-primary': !isSignUp && pathname === href,
+            'justify-between border-b border-border py-3 text-base text-text-light hover:text-primary': !isSignUp && pathname !== href,
+          })}
+        >
+          {label}
+          {!isSignUp && (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          )}
+        </Link>
+      )
+    })
+  )
+
   return (
     <header className="sticky top-0 z-10 bg-surface px-6 py-5 shadow-sm md:px-10">
 
@@ -81,7 +130,9 @@ const Header = () => {
           <div className="flex gap-6">{mainNav}</div>
         </div>
 
-        <div className="hidden md:flex items-center gap-4">{authNav}</div>
+        <div className="hidden min-h-9 items-center gap-4 md:flex">
+          {!isPending ? authNav : null}
+        </div>
 
         <span className="md:hidden font-semibold text-lg tracking-wide">Handcrafted Haven</span>
 
@@ -109,6 +160,7 @@ const Header = () => {
       {menuOpen && (
         <div className="mt-4 flex flex-col border-t border-border pt-4 md:hidden">
           {mobileNav}
+          {!isPending ? mobileAuthNav : null}
         </div>
       )}
 
