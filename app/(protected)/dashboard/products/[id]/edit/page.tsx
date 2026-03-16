@@ -6,7 +6,7 @@ const Page = async ({ params }: Props) => {
   const { id } = await params
 
   return (
-    <main className="px-6 py-8 bg-white">
+    <main className="bg-background px-6 py-8">
       <p>Edit Product Page</p>
       <p>Id: {id}</p>
     </main>

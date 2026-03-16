@@ -29,9 +29,9 @@ const Header = () => {
     <Link
       key={href}
       href={href}
-      className={clsx('text-sm font-medium transition-colors', {
-        'text-brand-primary': pathname === href,
-        'text-brand-text-light hover:text-brand-primary': pathname !== href,
+      className={clsx('text-sm', {
+        'text-text': pathname === href,
+        'text-text-light hover:text-text': pathname !== href,
       })}
     >{label}</Link>
   ))
@@ -40,9 +40,10 @@ const Header = () => {
     <Link
       key={href}
       href={href}
-      className={clsx('text-sm font-medium transition-colors', {
-        'bg-brand-primary text-white px-4 py-2 rounded-md hover:bg-brand-secondary': label === 'Sign Up',
-        'text-brand-text-light hover:text-brand-primary': label !== 'Sign Up',
+      className={clsx("text-sm", {
+        "rounded-md bg-primary px-4 py-2 text-surface hover:bg-secondary": label === "Sign Up",
+        "text-text": label !== "Sign Up" && pathname === href,
+        "text-text-light hover:text-text": label !== "Sign Up" && pathname !== href,
       })}
     >{label}</Link>
   ))
@@ -55,9 +56,9 @@ const Header = () => {
         href={href}
         onClick={() => setMenuOpen(false)}
         className={clsx('flex items-center font-medium transition-colors', {
-          'justify-center border-2 border-brand-primary text-brand-primary rounded-md py-2 mt-2 hover:bg-brand-primary hover:text-white': isSignUp,
-          'justify-between py-3 border-b border-brand-border text-base text-brand-primary': !isSignUp && pathname === href,
-          'justify-between py-3 border-b border-brand-border text-base text-brand-text-light hover:text-brand-primary': !isSignUp && pathname !== href,
+          'mt-2 justify-center rounded-md border-2 border-primary py-2 text-primary hover:bg-primary hover:text-surface': isSignUp,
+          'justify-between border-b border-border py-3 text-base text-primary': !isSignUp && pathname === href,
+          'justify-between border-b border-border py-3 text-base text-text-light hover:text-primary': !isSignUp && pathname !== href,
         })}
       >
         {label}
@@ -71,7 +72,7 @@ const Header = () => {
   })
 
   return (
-    <header className="sticky top-0 z-10 bg-brand-surface px-6 md:px-10 py-5 shadow-sm">
+    <header className="sticky top-0 z-10 bg-surface px-6 py-5 shadow-sm md:px-10">
 
       <nav className="flex items-center justify-between">
 
@@ -85,7 +86,7 @@ const Header = () => {
         <span className="md:hidden font-semibold text-lg tracking-wide">Handcrafted Haven</span>
 
         <button
-          className="md:hidden text-brand-text-light hover:text-brand-primary p-1"
+          className="p-1 text-text-light hover:text-primary md:hidden"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
@@ -106,7 +107,7 @@ const Header = () => {
       </nav>
 
       {menuOpen && (
-        <div className="md:hidden flex flex-col pt-4 border-t border-brand-border mt-4">
+        <div className="mt-4 flex flex-col border-t border-border pt-4 md:hidden">
           {mobileNav}
         </div>
       )}
