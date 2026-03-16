@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import React, { useState } from "react"
+import { useState } from "react"
 import { authClient } from "@/app/lib/auth-client"
 
 const SignupForm = () => {

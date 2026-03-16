@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState, type FormEventHandler } from "react"
+import { useState } from "react"
 import { authClient } from "@/app/lib/auth-client"
 
 const LoginForm = () => {
@@ -12,7 +12,7 @@ const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
+  const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
     setErrorMessage("")
     setIsSubmitting(true)
