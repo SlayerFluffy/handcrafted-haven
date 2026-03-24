@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:migrate": "npx @better-auth/cli migrate && node scripts/migrate.js"
   },
   "dependencies": {
     "better-auth": "^1.5.5",
