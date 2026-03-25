@@ -1,65 +1,102 @@
-### Handcrafted Haven Project
-The purpose is to develop an application for artists to showcase their work and advertise it to sellers.
+# Handcrafted Haven
 
-### Goals
-Allow sellers to create and manage a Seller Profile, including the ability to upload multiple handcrafted art pieces for sale.
-Product listings include name, description, price, categories, ratings, and reviews.
-Buyers are able to leave ratings and reviews on art products.
+A marketplace for artisans to showcase and sell handmade goods.
 
-Design Requirements - 
-Web standards, responsive design, branding, navigation, intuitive and clear design.
+## Team
 
-Technology Requirements - 
-Front-End: HTML, CSS, JavaScript, Next.js
-Back-End: Node.js, a database
-Project Management: GitHub Boards
-Code Management: Git and GitHub Repository
-Deployment / Cloud Platform: Vercel
+Drew Jezek, Adam Cottam, Denton Flake, Abbigail Nelson, Icaro San Angelo
 
-Limitations - 
-No payment processing, not reaching beyond requirements, not limiting users.
-Short time frame. Only 5 members on team. Personal lives.
+## Tech Stack
 
-### Members
-Drew Jezek
-Adam Cottam
-Denton Flake
-Abbigail Nelson
-Icaro San Angelo
+- **Framework**: Next.js (App Router)
+- **Database**: PostgreSQL via Supabase
+- **Auth**: better-auth
+- **Styles**: Tailwind CSS v4
+- **Deployment**: Vercel
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Prerequisites
 
-## Getting Started
+- Node.js 18+
+- A [Supabase](https://supabase.com) project (free tier works)
 
-First, run the development server:
+## Setup
+
+### 1. Clone and install
+
+```bash
+git clone <repo-url>
+cd handcrafted-haven
+npm install
+```
+
+### 2. Configure environment variables
+
+```bash
+cp .env.sample .env
+```
+
+Fill in `.env`:
+
+```
+DATABASE_URL=        # Supabase → Settings → Database → Connection string → URI
+BETTER_AUTH_SECRET=  # Any long random string: openssl rand -base64 32
+BETTER_AUTH_URL=http://localhost:3000
+```
+
+### 3. Run database migrations
+
+```bash
+npm run db:migrate
+```
+
+This runs better-auth's schema (auth tables) followed by the app schema (`app/lib/schema.sql`).
+
+> All statements use `IF NOT EXISTS`, so re-running is safe and won't wipe existing data.
+
+### 4. Start the dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script | Description |
+|---|---|
+| `npm run dev` | Start local dev server |
+| `npm run build` | Production build |
+| `npm run db:migrate` | Run all database migrations |
+| `npm run lint` | Run ESLint |
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/
+  (protected)/        # Auth-gated routes
+    dashboard/        # Seller dashboard
+  api/auth/           # better-auth API handler
+  components/         # Shared components
+  lib/
+    auth.ts           # better-auth server config
+    auth-client.ts    # Client-side auth
+    db.ts             # Postgres connection pool
+    schema.sql        # App database schema
+    types.ts          # TypeScript types
+  login/
+  signup/
+  products/           # Public product pages
+scripts/
+  migrate.js          # Migration runner
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Database Schema
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+App tables are defined in `app/lib/schema.sql`. To make a schema change, edit that file and re-run `npm run db:migrate`.
 
-## Deploy on Vercel
+better-auth manages its own tables (`user`, `session`, `account`, `verification`) automatically.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploy to [Vercel](https://vercel.com). Add the same environment variables from `.env` to your Vercel project settings, then run `npm run db:migrate` once against your production database.
