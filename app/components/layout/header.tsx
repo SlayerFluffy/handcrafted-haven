@@ -9,6 +9,7 @@ import { authClient } from '@/app/lib/auth-client'
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/products', label: 'Products' },
+  { href: '/creators', label: 'Creators' },
 ]
 
 const dashboardLink = { href: '/dashboard', label: 'Dashboard' }
