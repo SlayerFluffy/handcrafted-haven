@@ -1,10 +1,15 @@
+import Hero from '@/app/components/home/hero'
+import WhyUs from '@/app/components/home/why-us'
+import HowItWorks from '@/app/components/home/how-it-works'
+import CreatorInvite from '@/app/components/home/creator-invite'
 
-const Page = () => {
-  return (
-    <main className="bg-background px-6 py-8">
-      <p>Home Page</p>
-    </main>
-  )
-}
+const Page = () => (
+  <>
+    <Hero />
+    <WhyUs />
+    <HowItWorks />
+    <CreatorInvite />
+  </>
+)
 
 export default Page

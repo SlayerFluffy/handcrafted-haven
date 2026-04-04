@@ -1,6 +1,6 @@
-import "@/app/globals.css"
+import "./globals.css"
 import type { Metadata } from "next"
-import { montserrat } from "@/app/lib/fonts"
+import { montserrat, playfair } from "@/app/lib/fonts"
 import Header from "@/app/components/layout/header"
 import Footer from "@/app/components/layout/footer"
 
@@ -12,9 +12,11 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (
     <html lang="en">
-      <body className={`${montserrat.variable} bg-background text-text antialiased`}>
+      <body className={`${montserrat.variable} ${playfair.variable} bg-background text-text antialiased`}>
         <Header />
-        {children}
+        <main className="bg-background">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>
