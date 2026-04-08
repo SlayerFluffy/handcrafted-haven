@@ -12,7 +12,10 @@ const navLinks = [
   { href: '/creators', label: 'Creators' },
 ]
 
-const dashboardLink = { href: '/dashboard', label: 'Dashboard' }
+const authedBaseLinks = [
+  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/dashboard/profile', label: 'My Profile' },
+]
 
 const guestLinks = [
   { href: '/login', label: 'Login' },
@@ -24,7 +27,14 @@ const Header = () => {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
   const { data: session, isPending } = authClient.useSession()
-  const visibleNavLinks = session ? [...navLinks, dashboardLink] : navLinks
+  const myPublicProfileHref = session?.user?.id ? `/users/${session.user.id}` : null
+  const visibleNavLinks = session
+    ? [
+        ...navLinks,
+        ...authedBaseLinks,
+        ...(myPublicProfileHref ? [{ href: myPublicProfileHref, label: 'My Public Page' }] : []),
+      ]
+    : navLinks
 
   const router = useRouter()
 
