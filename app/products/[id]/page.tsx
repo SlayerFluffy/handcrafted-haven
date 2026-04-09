@@ -6,6 +6,11 @@ type Props = {
   params: Promise<{ id: string }>
 }
 
+const moneyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+})
+
 const Page = async ({ params }: Props) => {
   const { id } = await params
   const product = await getActiveProductById(id)
@@ -15,25 +20,56 @@ const Page = async ({ params }: Props) => {
   }
 
   return (
-    <main className="bg-background px-6 py-8 md:px-10">
-      <section className="mx-auto max-w-3xl space-y-4 rounded-lg border border-border bg-surface p-6">
-        <h1 className="text-2xl font-semibold text-text">{product.name}</h1>
-        <p className="text-lg font-medium text-text">${product.price.toFixed(2)}</p>
-
-        {product.description ? (
-          <p className="text-sm leading-6 text-text-light">{product.description}</p>
-        ) : (
-          <p className="text-sm text-text-light">No description provided.</p>
-        )}
-
-        {product.category ? (
-          <p className="text-sm text-text-light">Category: {product.category}</p>
-        ) : null}
-
-        <Link href={`/users/${product.sellerId}`} className="text-sm font-semibold text-primary hover:text-secondary">
-          View {product.sellerName}&apos;s profile
+    <main className="min-h-screen bg-background px-6 py-8 md:px-10">
+      <div className="mx-auto max-w-5xl rounded-2xl border border-border bg-surface p-6 shadow-sm md:p-8">
+        <Link
+          href="/products"
+          className="mb-6 inline-block text-sm text-primary hover:underline"
+        >
+          ← Back to Products
         </Link>
-      </section>
+
+        <div className="grid gap-8 md:grid-cols-2">
+          <div className="flex h-72 items-center justify-center rounded-2xl bg-accent/20 text-6xl font-semibold text-primary">
+            {product.name.charAt(0)}
+          </div>
+
+          <div>
+            {product.category && (
+              <p className="text-sm uppercase tracking-wide text-text-light">
+                {product.category}
+              </p>
+            )}
+
+            <h1 className="mt-2 text-3xl font-semibold text-text">
+              {product.name}
+            </h1>
+
+            <Link
+              href={`/users/${product.sellerId}`}
+              className="mt-2 inline-block text-sm text-primary hover:text-secondary"
+            >
+              by {product.sellerName}
+            </Link>
+
+            <p className="mt-6 text-3xl font-semibold text-text">
+              {moneyFormatter.format(product.price)}
+            </p>
+
+            {product.description ? (
+              <p className="mt-6 leading-7 text-text-light">
+                {product.description}
+              </p>
+            ) : (
+              <p className="mt-6 text-sm text-text-light">No description provided.</p>
+            )}
+
+            <button className="mt-6 rounded-lg bg-primary px-5 py-3 text-sm font-medium text-surface hover:bg-secondary">
+              Contact Seller
+            </button>
+          </div>
+        </div>
+      </div>
     </main>
   )
 }
