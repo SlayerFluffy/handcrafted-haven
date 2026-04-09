@@ -1,5 +1,6 @@
-import Link from 'next/link'
-import { mockProducts } from '@/app/lib/mock-products'
+import Link from "next/link"
+import { notFound } from "next/navigation"
+import { getActiveProductById } from "@/app/lib/product-data"
 
 type Props = {
   params: Promise<{ id: string }>
@@ -12,22 +13,10 @@ const moneyFormatter = new Intl.NumberFormat('en-US', {
 
 const Page = async ({ params }: Props) => {
   const { id } = await params
-  const product = mockProducts.find((item) => item.id === id)
+  const product = await getActiveProductById(id)
 
   if (!product) {
-    return (
-      <main className="min-h-screen bg-background px-6 py-8 md:px-10">
-        <div className="mx-auto max-w-4xl rounded-2xl border border-border bg-surface p-8 shadow-sm">
-          <h1 className="text-2xl font-semibold text-text">Product not found</h1>
-          <Link 
-            href="/products"
-            className="mt-4 inline-block rounded-lg bg-primary px-4 py-2 text-sm font-medium text-surface hover:bg-secondary"
-          >
-            Back to Products
-        </Link>
-      </div>
-      </main>
-    )
+    notFound()
   }
 
   return (
@@ -46,28 +35,34 @@ const Page = async ({ params }: Props) => {
           </div>
 
           <div>
-            <p className="text-sm uppercase tracking-wide text-text-light">
-              {product.category}
-            </p>
+            {product.category && (
+              <p className="text-sm uppercase tracking-wide text-text-light">
+                {product.category}
+              </p>
+            )}
 
             <h1 className="mt-2 text-3xl font-semibold text-text">
               {product.name}
             </h1>
 
-            <p className="mt-2 text-text-light">by {product.seller}</p>
+            <Link
+              href={`/users/${product.sellerId}`}
+              className="mt-2 inline-block text-sm text-primary hover:text-secondary"
+            >
+              by {product.sellerName}
+            </Link>
 
             <p className="mt-6 text-3xl font-semibold text-text">
               {moneyFormatter.format(product.price)}
             </p>
 
-            <div className="mt-4 flex gap-6 text-sm text-text-light">
-              <span>⭐ {product.rating.toFixed(1)}</span>
-              <span>{product.reviews} reviews</span>
-            </div>
-
-            <p className="mt-6 leading-7 text-text-light">
-              {product.description}
-            </p>
+            {product.description ? (
+              <p className="mt-6 leading-7 text-text-light">
+                {product.description}
+              </p>
+            ) : (
+              <p className="mt-6 text-sm text-text-light">No description provided.</p>
+            )}
 
             <button className="mt-6 rounded-lg bg-primary px-5 py-3 text-sm font-medium text-surface hover:bg-secondary">
               Contact Seller
