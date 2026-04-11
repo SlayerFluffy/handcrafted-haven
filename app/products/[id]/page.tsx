@@ -64,9 +64,12 @@ const Page = async ({ params }: Props) => {
               <p className="mt-6 text-sm text-text-light">No description provided.</p>
             )}
 
-            <button className="mt-6 rounded-lg bg-primary px-5 py-3 text-sm font-medium text-surface hover:bg-secondary">
-              Contact Seller
-            </button>
+            <Link
+              href={`/users/${product.sellerId}`}
+              className="mt-6 inline-block rounded-lg bg-primary px-5 py-3 text-sm font-medium text-surface hover:bg-secondary"
+            >
+              View Seller
+            </Link>
           </div>
         </div>
       </div>

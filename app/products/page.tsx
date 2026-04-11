@@ -1,13 +1,31 @@
 import Link from "next/link"
-import { getActiveProducts } from "@/app/lib/product-data"
+import { Suspense } from "react"
+import { getActiveProducts, getDistinctCategories } from "@/app/lib/product-data"
+import ProductFilters from "@/app/components/products/product-filters"
 
 const moneyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
 })
 
-const Page = async () => {
-  const products = await getActiveProducts()
+type SearchParams = {
+  category?: string
+  minPrice?: string
+  maxPrice?: string
+}
+
+const Page = async ({ searchParams }: { searchParams: Promise<SearchParams> }) => {
+  const params = await searchParams
+
+  const minPrice = params.minPrice ? parseFloat(params.minPrice) : undefined
+  const maxPrice = params.maxPrice ? parseFloat(params.maxPrice) : undefined
+
+  const [products, categories] = await Promise.all([
+    getActiveProducts({ category: params.category, minPrice, maxPrice }),
+    getDistinctCategories(),
+  ])
+
+  const hasFilters = params.category || params.minPrice || params.maxPrice
 
   return (
     <main className="min-h-screen bg-background px-6 py-8 md:px-10">
@@ -24,11 +42,17 @@ const Page = async () => {
           </p>
         </div>
 
+        <Suspense>
+          <ProductFilters categories={categories} />
+        </Suspense>
+
         {products.length === 0 ? (
           <div className="rounded-2xl border border-border bg-surface p-8 text-center shadow-sm">
             <h2 className="text-xl font-semibold text-text">No products found</h2>
             <p className="mt-2 text-text-light">
-              No products are currently listed.
+              {hasFilters
+                ? 'No products match the selected filters.'
+                : 'No products are currently listed.'}
             </p>
           </div>
         ) : (

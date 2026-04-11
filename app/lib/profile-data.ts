@@ -26,6 +26,14 @@ export type ManagedProduct = {
   updatedAt: Date
 }
 
+export type PublicCreator = {
+  id: string
+  name: string
+  image: string | null
+  bio: string | null
+  productCount: number
+}
+
 export type PublicProduct = {
   id: string
   name: string
@@ -33,6 +41,25 @@ export type PublicProduct = {
   price: number
   imageUrl: string | null
   category: string | null
+}
+
+export const getActiveCreators = async (): Promise<PublicCreator[]> => {
+  const result = await pool.query(
+    `
+      SELECT
+        u.id,
+        u.name,
+        u.image,
+        up.bio,
+        COUNT(p.id)::int AS "productCount"
+      FROM "user" AS u
+      INNER JOIN products AS p ON p.seller_id = u.id AND p.is_active = true
+      LEFT JOIN user_profiles AS up ON up.user_id = u.id
+      GROUP BY u.id, u.name, u.image, up.bio
+      ORDER BY u.name
+    `,
+  )
+  return result.rows as PublicCreator[]
 }
 
 export const getPrivateProfileById = async (userId: string): Promise<PrivateProfileData | null> => {
