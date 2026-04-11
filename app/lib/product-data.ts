@@ -1,5 +1,11 @@
 import pool from "@/app/lib/db"
 
+export type ProductFilters = {
+  category?: string
+  minPrice?: number
+  maxPrice?: number
+}
+
 export type ProductRow = {
   id: string
   sellerId: string
@@ -60,7 +66,32 @@ export const getProductByIdForOwner = async (
   return result.rows[0] as ProductRow
 }
 
-export const getActiveProducts = async (): Promise<PublicProductRow[]> => {
+export const getDistinctCategories = async (): Promise<string[]> => {
+  const result = await pool.query(
+    `SELECT DISTINCT category FROM products WHERE is_active = true AND category IS NOT NULL ORDER BY category`,
+  )
+  return result.rows.map((row: { category: string }) => row.category)
+}
+
+export const getActiveProducts = async (filters: ProductFilters = {}): Promise<PublicProductRow[]> => {
+  const conditions = ['p.is_active = true']
+  const values: (string | number)[] = []
+
+  if (filters.category) {
+    values.push(filters.category)
+    conditions.push(`p.category = $${values.length}`)
+  }
+
+  if (filters.minPrice !== undefined) {
+    values.push(filters.minPrice)
+    conditions.push(`p.price >= $${values.length}`)
+  }
+
+  if (filters.maxPrice !== undefined) {
+    values.push(filters.maxPrice)
+    conditions.push(`p.price <= $${values.length}`)
+  }
+
   const result = await pool.query(
     `
       SELECT
@@ -74,9 +105,10 @@ export const getActiveProducts = async (): Promise<PublicProductRow[]> => {
         p.category
       FROM products AS p
       INNER JOIN "user" AS u ON u.id = p.seller_id
-      WHERE p.is_active = true
+      WHERE ${conditions.join(' AND ')}
       ORDER BY p.created_at DESC
     `,
+    values,
   )
 
   return result.rows as PublicProductRow[]
