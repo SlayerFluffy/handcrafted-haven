@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -14,7 +15,7 @@ const navLinks = [
 
 const authedBaseLinks = [
   { href: '/dashboard', label: 'Dashboard' },
-  { href: '/dashboard/profile', label: 'My Profile' },
+  // { href: '/dashboard/profile', label: 'My Profile' },
 ]
 
 const guestLinks = [
@@ -22,19 +23,15 @@ const guestLinks = [
   { href: '/signup', label: 'Sign Up' },
 ]
 
-const Header = () => {
+const avatarFallback = (value?: string | null) => value?.trim().charAt(0).toUpperCase() || 'U'
 
+const Header = () => {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
   const { data: session, isPending } = authClient.useSession()
-  const myPublicProfileHref = session?.user?.id ? `/users/${session.user.id}` : null
-  const visibleNavLinks = session
-    ? [
-        ...navLinks,
-        ...authedBaseLinks,
-        ...(myPublicProfileHref ? [{ href: myPublicProfileHref, label: 'My Public Page' }] : []),
-      ]
-    : navLinks
+  const visibleNavLinks = [...navLinks, ...authedBaseLinks]
+  const profileHref = session?.user?.id ? `/users/${session.user.id}` : '/dashboard/profile'
+  const displayName = session?.user?.name || session?.user?.email || 'User'
 
   const router = useRouter()
 
@@ -57,13 +54,35 @@ const Header = () => {
   ))
 
   const authNav = session ? (
-    <button
-      type="button"
-      onClick={handleSignOut}
-      className="text-sm text-text-light hover:text-text"
-    >
-      Log Out
-    </button>
+    <div className="flex items-center gap-3">
+      <button
+        type="button"
+        onClick={handleSignOut}
+        className="text-sm text-text-light hover:text-text"
+      >
+        Log Out
+      </button>
+
+      <Link
+        href={profileHref}
+        aria-label="View profile"
+        className="rounded-full transition hover:opacity-85"
+      >
+        {session.user.image ? (
+          <Image
+            src={session.user.image}
+            alt={`${displayName} profile`}
+            width={36}
+            height={36}
+            className="h-9 w-9 rounded-full border border-border object-cover"
+          />
+        ) : (
+          <div className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-sm font-semibold text-text">
+            {avatarFallback(displayName)}
+          </div>
+        )}
+      </Link>
+    </div>
   ) : (
     guestLinks.map(({ href, label }) => (
       <Link
@@ -105,7 +124,7 @@ const Header = () => {
     <button
       type="button"
       onClick={handleSignOut}
-      className="justify-between border-b border-border py-3 text-left text-base font-medium text-text-light hover:text-primary"
+      className="flex items-center justify-between border-b border-border py-3 text-base font-medium text-text-light transition-colors hover:text-primary"
     >
       Log Out
     </button>

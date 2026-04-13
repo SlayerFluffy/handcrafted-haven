@@ -76,7 +76,15 @@ const Page = async () => {
   return (
     <main className="bg-background px-6 py-8 md:px-10">
       <section className="mx-auto max-w-5xl space-y-8">
-        <h1 className="text-3xl font-semibold text-text">My Profile</h1>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-3xl font-semibold text-text">My Profile</h1>
+          <Link
+            href={`/users/${session.user.id}`}
+            className="rounded-md border border-border px-4 py-2 text-sm font-semibold text-text hover:border-secondary hover:text-secondary"
+          >
+            View Public Profile
+          </Link>
+        </div>
 
         <div className="grid gap-6 lg:grid-cols-[2fr_3fr]">
           <div className="rounded-lg border border-border bg-surface p-6">

@@ -20,7 +20,7 @@ const Hero = () => {
             Browse Products
           </Link>
 
-          <Link href="/creators" className="rounded-md border border-primary px-8 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-surface">
+          <Link href="/users" className="rounded-md border border-primary px-8 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-surface">
             Meet Our Creators
           </Link>
 
