@@ -27,14 +27,7 @@ const Header = () => {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
   const { data: session, isPending } = authClient.useSession()
-  // const myPublicProfileHref = session?.user?.id ? `/users/${session.user.id}` : null
-  const visibleNavLinks = session
-    ? [
-        ...navLinks,
-        ...authedBaseLinks,
-        // ...(myPublicProfileHref ? [{ href: myPublicProfileHref, label: 'My Public Page' }] : []),
-      ]
-    : navLinks
+  const visibleNavLinks = [...navLinks, ...authedBaseLinks]
 
   const router = useRouter()
 
