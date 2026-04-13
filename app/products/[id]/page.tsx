@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { notFound } from "next/navigation"
 import { getActiveProductById } from "@/app/lib/product-data"
 
@@ -30,8 +31,20 @@ const Page = async ({ params }: Props) => {
         </Link>
 
         <div className="grid gap-8 md:grid-cols-2">
-          <div className="flex h-72 items-center justify-center rounded-2xl bg-accent/20 text-6xl font-semibold text-primary">
-            {product.name.charAt(0)}
+          <div className="relative h-72 overflow-hidden rounded-2xl bg-accent/20">
+            {product.imageUrl ? (
+              <Image
+                src={product.imageUrl}
+                alt={product.name}
+                fill
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="object-cover"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-6xl font-semibold text-primary">
+                {product.name.charAt(0)}
+              </div>
+            )}
           </div>
 
           <div>

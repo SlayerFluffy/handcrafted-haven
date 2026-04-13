@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import ImageUploadField from "@/app/components/forms/image-upload-field"
 import { deleteProductForSeller } from "@/app/lib/product-data"
 import {
   getPrivateProfileById,
@@ -94,15 +95,12 @@ const Page = async () => {
                 />
               </label>
 
-              <label className="block space-y-2">
-                <span className="text-sm font-medium text-text">Profile Image URL</span>
-                <input
-                  type="url"
-                  name="image"
-                  defaultValue={profile.image ?? ""}
-                  className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-text outline-none focus:border-secondary"
-                />
-              </label>
+              <ImageUploadField
+                label="Profile Image URL"
+                fieldName="image"
+                folder="profiles"
+                defaultValue={profile.image ?? ""}
+              />
 
               <label className="block space-y-2">
                 <span className="text-sm font-medium text-text">Bio</span>

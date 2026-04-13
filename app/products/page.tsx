@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Suspense } from "react"
+import Image from "next/image"
 import { getActiveProducts, getDistinctCategories } from "@/app/lib/product-data"
 import ProductFilters from "@/app/components/products/product-filters"
 
@@ -67,8 +68,20 @@ const Page = async ({ searchParams }: { searchParams: Promise<SearchParams> }) =
                   key={product.id}
                   className="overflow-hidden rounded-2xl border border-border bg-surface shadow-sm hover:shadow-md"
                 >
-                  <div className="flex h-44 items-center justify-center bg-accent text-4xl font-semibold text-primary">
-                    {product.name.charAt(0)}
+                  <div className="relative h-44 overflow-hidden bg-accent">
+                    {product.imageUrl ? (
+                      <Image
+                        src={product.imageUrl}
+                        alt={product.name}
+                        fill
+                        sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-4xl font-semibold text-primary">
+                        {product.name.charAt(0)}
+                      </div>
+                    )}
                   </div>
 
                   <div className="p-5">

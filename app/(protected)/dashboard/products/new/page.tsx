@@ -1,5 +1,6 @@
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import ImageUploadField from "@/app/components/forms/image-upload-field"
 import { createProductForSeller } from "@/app/lib/product-data"
 import { getSession } from "@/app/lib/session"
 import { asNonEmptyString, asOptionalString, parseChecked, parsePrice } from "@/app/lib/validation"
@@ -79,14 +80,7 @@ const Page = async () => {
             />
           </label>
 
-          <label className="block space-y-2">
-            <span className="text-sm font-medium text-text">Image URL</span>
-            <input
-              type="url"
-              name="imageUrl"
-              className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-text outline-none focus:border-secondary"
-            />
-          </label>
+          <ImageUploadField label="Image URL" fieldName="imageUrl" folder="products" />
 
           <label className="block space-y-2">
             <span className="text-sm font-medium text-text">Category</span>
