@@ -41,6 +41,9 @@ Fill in `.env`:
 DATABASE_URL=        # Supabase → Settings → Database → Connection string → URI
 BETTER_AUTH_SECRET=  # Any long random string: openssl rand -base64 32
 BETTER_AUTH_URL=http://localhost:3000
+NEXT_PUBLIC_SUPABASE_URL=                 # Supabase project URL for image storage
+NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET=images
+SUPABASE_SERVICE_ROLE_KEY=                # Supabase service role key for server-side uploads
 ```
 
 ### 3. Run database migrations
@@ -63,12 +66,12 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Available Scripts
 
-| Script | Description |
-|---|---|
-| `npm run dev` | Start local dev server |
-| `npm run build` | Production build |
+| Script               | Description                 |
+| -------------------- | --------------------------- |
+| `npm run dev`        | Start local dev server      |
+| `npm run build`      | Production build            |
 | `npm run db:migrate` | Run all database migrations |
-| `npm run lint` | Run ESLint |
+| `npm run lint`       | Run ESLint                  |
 
 ## Project Structure
 

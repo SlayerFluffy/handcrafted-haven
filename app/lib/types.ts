@@ -9,6 +9,12 @@ export type User = {
   updatedAt: Date
 }
 
+export type UserProfile = {
+  userId: string
+  bio: string | null
+  updatedAt: Date
+}
+
 export type Product = {
   id: string
   sellerId: string
@@ -33,7 +39,9 @@ export type Review = {
 
 // Joined types for common queries
 export type ProductWithSeller = Product & {
-  seller: Pick<User, 'id' | 'name' | 'image'>
+  seller: Pick<User, 'id' | 'name' | 'image'> & {
+    bio?: string | null
+  }
 }
 
 export type ReviewWithReviewer = Review & {

@@ -18,6 +18,11 @@ const StarRating = ({ rating }: { rating: number }) => (
   </div>
 )
 
+const moneyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+})
+
 const Page = async ({ params }: Props) => {
   const { id } = await params
   const product = await getProductById(id)
@@ -26,6 +31,13 @@ const Page = async ({ params }: Props) => {
   return (
     <main className="bg-background px-6 py-8 md:px-10">
       <div className="mx-auto max-w-5xl">
+        <Link
+          href="/products"
+          className="mb-6 inline-block text-sm text-primary hover:underline"
+        >
+          ← Back to Products
+        </Link>
+
         {/* Product Info */}
         <div className="flex flex-col gap-8 md:flex-row">
           {/* Image */}
@@ -33,7 +45,9 @@ const Page = async ({ params }: Props) => {
             {product.imageUrl ? (
               <Image src={product.imageUrl} alt={product.name} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
             ) : (
-              <div className="flex h-full items-center justify-center text-text-light">No image</div>
+              <div className="flex h-full items-center justify-center text-6xl font-semibold text-primary">
+                {product.name.charAt(0)}
+              </div>
             )}
           </div>
 
@@ -43,7 +57,7 @@ const Page = async ({ params }: Props) => {
               <span className="text-sm font-medium uppercase tracking-wide text-accent">{product.category}</span>
             )}
             <h1 className="text-3xl font-bold text-text">{product.name}</h1>
-            <p className="text-2xl font-semibold text-primary">${product.price.toFixed(2)}</p>
+            <p className="text-2xl font-semibold text-primary">{moneyFormatter.format(product.price)}</p>
 
             {/* Rating summary */}
             <div className="flex items-center gap-2">
