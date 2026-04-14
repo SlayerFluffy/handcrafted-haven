@@ -2,6 +2,10 @@ import Link from "next/link"
 import Image from "next/image"
 import { notFound } from "next/navigation"
 import { getActiveProductById } from "@/app/lib/product-data"
+import { getReviewsForProduct, getAverageRating, getUserReview } from "@/app/lib/review-data"
+import { getSession } from "@/app/lib/session"
+import ReviewForm from "@/app/components/products/review-form"
+import ReviewList from "@/app/components/products/review-list"
 
 type Props = {
   params: Promise<{ id: string }>
@@ -14,7 +18,16 @@ const moneyFormatter = new Intl.NumberFormat('en-US', {
 
 const Page = async ({ params }: Props) => {
   const { id } = await params
-  const product = await getActiveProductById(id)
+  const [product, reviews, ratingStats, session] = await Promise.all([
+    getActiveProductById(id),
+    getReviewsForProduct(id),
+    getAverageRating(id),
+    getSession(),
+  ])
+
+  const userReview = session?.user
+    ? await getUserReview(id, session.user.id)
+    : undefined
 
   if (!product) {
     notFound()
@@ -83,6 +96,28 @@ const Page = async ({ params }: Props) => {
             >
               View Seller
             </Link>
+          </div>
+        </div>
+
+        <div className="mt-10 border-t border-border pt-8">
+          <div className="flex items-baseline gap-3">
+            <h2 className="text-xl font-semibold text-text">Reviews ({ratingStats.count})</h2>
+            {ratingStats.avg !== null && (
+              <span className="text-sm text-text-light">
+                <span className="text-yellow-400">★</span> {ratingStats.avg} / 5
+              </span>
+            )}
+          </div>
+          <div className="mt-6">
+            <ReviewForm
+              productId={id}
+              isLoggedIn={!!session?.user}
+              existingRating={userReview?.rating}
+              existingComment={userReview?.comment ?? undefined}
+            />
+          </div>
+          <div className="mt-8">
+            <ReviewList reviews={reviews} />
           </div>
         </div>
       </div>
